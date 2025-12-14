@@ -1,15 +1,15 @@
-#include<stdio.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 typedef struct node{
-   int data;
-   struct node *next;
-}Node;
+    int data;
+    struct node *next;
+} Node;
 
 typedef struct {
     Node *head;
     int count;
-}List;
+} List;
 
 List* initialize();
 void empty(List *list);
@@ -19,13 +19,13 @@ void insertPos(List *list, int data, int index);
 void deleteStart(List *list);
 void deleteLast(List *list);
 void deletePos(List *list, int index);
-int retrieve(List *list, int index);
-int locate(List *list, int data);
+int  retrieve(List *list, int index);
+int  locate(List *list, int data);
 void display(List *list);
 
 List* initialize(){
-    List* newList = (List*)malloc(sizeof(List));
-    if (newList == NULL){
+    List *newList = (List*)malloc(sizeof(List));
+    if(newList == NULL){
         return NULL;
     }
     newList->head = NULL;
@@ -38,14 +38,15 @@ void empty(List *list){
         return;
     }
 
-    Node* current = list->head;
-    Node* nextNode;
+    Node *current = list->head;
+    Node *nextNode;
 
-    while (current!=NULL){
+    while(current != NULL){
         nextNode = current->next;
         free(current);
         current = nextNode;
     }
+
     list->head = NULL;
     list->count = 0;
 }
@@ -114,8 +115,8 @@ void insertPos(List *list, int data, int index){
         newNode->data = data;
 
         Node *current = list->head;
-        int i;
-        for(i = 0; i < index - 1; i++){
+        int ndx;
+        for(ndx = 0; ndx < index - 1; ndx++){
             current = current->next;
         }
 
@@ -149,8 +150,8 @@ void deleteLast(List *list){
     }
 
     Node *current = list->head;
-    int i;
-    for(i = 0; i < list->count - 2; i++){
+    int ndx;
+    for(ndx = 0; ndx < list->count - 2; ndx++){
         current = current->next;
     }
 
@@ -173,8 +174,8 @@ void deletePos(List *list, int index){
         deleteStart(list);
     }else{
         Node *current = list->head;
-        int i;
-        for(i = 0; i < index - 1; i++){
+        int ndx;
+        for(ndx = 0; ndx < index - 1; ndx++){
             current = current->next;
         }
 
@@ -191,8 +192,8 @@ int retrieve(List *list, int index){
     }
 
     Node *current = list->head;
-    int i;
-    for(i = 0; i < index; i++){
+    int ndx;
+    for(ndx = 0; ndx < index; ndx++){
         current = current->next;
     }
 
@@ -231,31 +232,32 @@ void display(List *list){
     printf("\n");
 }
 
-int main (){
-    List *list = initialize();
+int main(){
+    List *L = initialize();
 
-    insertFirst(list, 3);
-    insertFirst(list, 2);
-    insertFirst(list, 1);
+    insertFirst(L, 5);
+    insertFirst(L, 6);
+    insertFirst(L, 2);
+    insertLast(L, 7);
+    display(L);
 
-    insertLast(list, 4);
-    insertLast(list, 5);
+    insertPos(L, 7, 2);
+    display(L);
 
-    insertPos(list, 10, 2);
+    deleteStart(L);
+    display(L);
 
-    display(list);
+    deleteLast(L);
+    display(L);
 
-    deleteStart(list);
-    deleteLast(list);
-    deletePos(list, 2);
+    deletePos(L, 1);
+    display(L);
 
-    display(list);
+    printf("retrieve index 0: %d\n", retrieve(L, 0));
+    printf("locate value 5: %d\n", locate(L, 5));
 
-    printf("Element at index 1: %d\n", retrieve(list, 1));
-    printf("Index of element 4: %d\n", locate(list, 4));
-
-    empty(list);
-    free(list);
+    empty(L);
+    free(L);
 
     return 0;
 }
