@@ -1,4 +1,10 @@
 #include <stdio.h>
+#include <stdlib.h>
+
+typedef struct {
+    int data[100];
+    int size;
+} PriorityQueue;
 
 void swap(int *a, int *b) {
     int tmp = *a;
@@ -6,7 +12,7 @@ void swap(int *a, int *b) {
     *b = tmp;
 }
 
-void upHeapify(int arr[], int ndx) {
+void upHeapifyMax(int arr[], int ndx) {
     while (ndx > 0) {
         int parent = (ndx - 1) / 2;
         if (arr[parent] < arr[ndx]) {
@@ -18,7 +24,7 @@ void upHeapify(int arr[], int ndx) {
     }
 }
 
-void downHeapify(int arr[], int n, int ndx) {
+void downHeapifyMax(int arr[], int n, int ndx) {
     while (1) {
         int left = 2 * ndx + 1;
         int right = 2 * ndx + 2;
@@ -39,22 +45,13 @@ void downHeapify(int arr[], int n, int ndx) {
     }
 }
 
-typedef struct {
-    int data[100];
-    int size;
-} PriorityQueue;
-
 void initPQ(PriorityQueue *pq) {
     pq->size = 0;
 }
 
-int isEmptyPQ(PriorityQueue *pq) {
-    return pq->size == 0;
-}
-
 void enqueue(PriorityQueue *pq, int value) {
     pq->data[pq->size] = value;
-    upHeapify(pq->data, pq->size);
+    upHeapifyMax(pq->data, pq->size);
     pq->size++;
 }
 
@@ -65,42 +62,47 @@ int dequeue(PriorityQueue *pq) {
     int top = pq->data[0];
     pq->data[0] = pq->data[pq->size - 1];
     pq->size--;
-    downHeapify(pq->data, pq->size, 0);
+    downHeapifyMax(pq->data, pq->size, 0);
     return top;
 }
 
-int peekPQ(PriorityQueue *pq) {
+int peek(PriorityQueue *pq) {
     if (pq->size == 0) {
         return -1;
     }
     return pq->data[0];
 }
 
+void display(PriorityQueue *pq) {
+    int ndx;
+    for (ndx = 0; ndx < pq->size; ndx++) {
+        printf("%d ", pq->data[ndx]);
+    }
+    printf("\n");
+}
+
 int main() {
     PriorityQueue pq;
     initPQ(&pq);
 
-    enqueue(&pq, 5);
-    enqueue(&pq, 2);
+    enqueue(&pq, 15);
+    enqueue(&pq, 10);
+    enqueue(&pq, 20);
     enqueue(&pq, 8);
-    enqueue(&pq, 3);
-    enqueue(&pq, 6);
+    enqueue(&pq, 5);
 
-    int ndx;
-    for (ndx = 0; ndx < pq.size; ndx++) {
-        printf("%d ", pq.data[ndx]);
-    }
-    printf("\n");
+    printf("Heap: ");
+    display(&pq);
 
-    printf("Top: %d\n", peekPQ(&pq));
+    printf("Peek: %d\n", peek(&pq));
 
     printf("Dequeued: %d\n", dequeue(&pq));
-    printf("Dequeued: %d\n", dequeue(&pq));
+    printf("Heap: ");
+    display(&pq);
 
-    for (ndx = 0; ndx < pq.size; ndx++) {
-        printf("%d ", pq.data[ndx]);
-    }
-    printf("\n");
+    printf("Dequeued: %d\n", dequeue(&pq));
+    printf("Heap: ");
+    display(&pq);
 
     return 0;
 }
